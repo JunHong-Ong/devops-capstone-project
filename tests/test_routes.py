@@ -126,6 +126,7 @@ class TestAccountService(TestCase):
     # ADD YOUR TEST CASES HERE ...
     def test_read_an_account(self):
         """It should Read a single Account"""
+
         account = self._create_accounts(1)[0]
         response = self.client.get(
             f"{BASE_URL}/{account.id}"
@@ -136,8 +137,45 @@ class TestAccountService(TestCase):
 
     def test_account_not_found(self):
         """It should not Read an Account that is not found"""
+
         response = self.client.get(
             f"{BASE_URL}/0",
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_an_account(self):
+        """It should Update an existing Account"""
+
+        # Create an Account to update
+        test_account = AccountFactory()
+        response = self.client.post(
+            BASE_URL,
+            json=test_account.serialize(),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Update the account
+        new_account = response.get_json()
+        new_account["name"] = "Jun Hong"
+        response = self.client.put(
+            f"{BASE_URL}/{new_account['id']}",
+            json=new_account,
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        updated_account = response.get_json()
+        self.assertEqual(updated_account.get("name"), "Jun Hong")
+    
+    def test_update_account_not_found(self):
+        """It should not Update an Account that is not found"""
+
+        # Update a non-existing account
+        test_account = AccountFactory()
+        response = self.client.put(
+            f"{BASE_URL}/0",
+            json=test_account.serialize(),
             content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
