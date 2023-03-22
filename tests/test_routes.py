@@ -172,7 +172,7 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         updated_account = response.get_json()
         self.assertEqual(updated_account.get("name"), "Jun Hong")
-    
+
     def test_update_account_not_found(self):
         """It should not Update an Account that is not found"""
 
@@ -186,7 +186,7 @@ class TestAccountService(TestCase):
 
     def test_get_account_list(self):
         """It should Get a list of Accounts"""
-        
+
         # Create n Accounts
         num_accounts = 5
         self._create_accounts(num_accounts)
@@ -198,7 +198,7 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(len(data), num_accounts)
-    
+
     def test_delete_account(self):
         """It should Delete an Account"""
 
@@ -228,7 +228,7 @@ class TestAccountService(TestCase):
         }
         for key, value in headers.items():
             self.assertEqual(response.headers.get(key), value)
-    
+
     def test_cors_security(self):
         """It should return a CORS header"""
 
@@ -238,4 +238,4 @@ class TestAccountService(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Check for the CORS header
-        self.assertEqual(response.headers.get("Access-Control-Allow-Origin"), "*") 
+        self.assertEqual(response.headers.get("Access-Control-Allow-Origin"), "*")
